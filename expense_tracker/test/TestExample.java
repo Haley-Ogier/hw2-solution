@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale.Category;
 import java.text.ParseException;
 
 import org.junit.Before;
@@ -210,4 +211,40 @@ public class TestExample {
 	    assertEquals(categoryToFilterBy, currDisplayedTransaction.getCategory());
 	}
     }
+
+
+    @Test
+    public void testRemoveNonExistentTransaction() {
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+    
+        // Perform the action: Add and remove a transaction that is not there
+	double amount = 50.0;
+	String category = CATEGORY_FOOD;
+        Transaction addedTransaction = new Transaction(amount, category);
+        model.addTransaction(addedTransaction);
+    Transaction notAddedTransaction = new Transaction(0.32, CATEGORY_FOOD);
+    
+        // Pre-condition: List of transactions contains only
+	//                the added transaction
+        assertEquals(1, model.getTransactions().size());
+	Transaction firstTransaction = model.getTransactions().get(0);
+	checkTransaction(amount, category, firstTransaction);
+
+	assertEquals(amount, getTotalCost(), 0.01);
+	
+	// Perform the action: Remove the transaction
+        model.removeTransaction(notAddedTransaction);
+    
+        // Post-condition: List of transactions contains only the addedTransaction
+        List<Transaction> transactions = model.getTransactions();
+        assertEquals(1, transactions.size());
+        assertEquals(transactions.get(0).getCategory(), CATEGORY_FOOD);
+        assertEquals(transactions.get(0).getAmount(), 50.0,0.01);
+    
+        // Check the total cost after removing the transaction
+        double totalCost = getTotalCost();
+        assertEquals(50.0, totalCost, 0.01);
+    }
+
 }
