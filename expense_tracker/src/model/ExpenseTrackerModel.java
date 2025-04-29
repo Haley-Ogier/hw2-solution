@@ -10,7 +10,6 @@ public class ExpenseTrackerModel {
 
   //encapsulation - data integrity
   private List<Transaction> transactions;
-  private final Deque<Transaction> undoStack = new ArrayDeque<>();
 
 
 
@@ -29,7 +28,6 @@ public class ExpenseTrackerModel {
   public boolean removeTransaction(Transaction t) {
     if (t == null) throw new IllegalArgumentException("null tx");
     boolean removed = transactions.remove(t);
-    if (removed) undoStack.push(t);        
     return removed;
   }
 
@@ -37,13 +35,5 @@ public class ExpenseTrackerModel {
     //encapsulation - data integrity
     return Collections.unmodifiableList(new ArrayList<>(transactions));
   }
-
-  public boolean undo() {
-    if (undoStack.isEmpty()) return false;
-    Transaction last = undoStack.pop();
-    transactions.add(last);
-    return true;
-  }
-  public boolean canUndo() { return !undoStack.isEmpty(); }
 
 }

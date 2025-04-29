@@ -71,18 +71,10 @@ public class ExpenseTrackerController {
     Transaction sel = view.getSelectedTransaction();
     if (sel == null) return false;
     if (model.removeTransaction(sel)) {
-        refresh();                          // redraw table + total
-        view.setUndoEnabled(model.canUndo());
+        refresh();                          
         return true;
     }
     return false;
   }
 
-  public void undo() {
-    if (model.undo()) {
-        refresh();                   
-    }
-    view.setUndoEnabled(model.canUndo());
-  }
-    
 }
