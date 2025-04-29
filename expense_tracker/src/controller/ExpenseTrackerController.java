@@ -66,5 +66,23 @@ public class ExpenseTrackerController {
     }
     view.displayFilteredTransactions(filteredTransactions);
   }
+
+  public boolean removeSelectedTransaction() {
+    Transaction sel = view.getSelectedTransaction();
+    if (sel == null) return false;
+    if (model.removeTransaction(sel)) {
+        refresh();                          // redraw table + total
+        view.setUndoEnabled(model.canUndo());
+        return true;
+    }
+    return false;
+  }
+
+  public void undo() {
+    if (model.undo()) {
+        refresh();                   
+    }
+    view.setUndoEnabled(model.canUndo());
+  }
     
 }

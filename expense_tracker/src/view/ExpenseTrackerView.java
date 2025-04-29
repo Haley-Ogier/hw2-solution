@@ -24,6 +24,9 @@ public class ExpenseTrackerView extends JFrame {
   private JButton amountFilterBtn;
 
   private JButton clearFilterBtn;
+
+  private JButton removeBtn;
+  private JButton undoBtn;
     
   private List<Transaction> displayedTransactions = new ArrayList<>(); // ✅ Moved here
 
@@ -66,6 +69,13 @@ public class ExpenseTrackerView extends JFrame {
     buttonPanel.add(amountFilterBtn);
     buttonPanel.add(categoryFilterBtn);
     buttonPanel.add(clearFilterBtn);
+
+    removeBtn = new JButton("Remove Selected");
+    undoBtn   = new JButton("Undo ⤺");
+    undoBtn.setEnabled(false);          
+
+    buttonPanel.add(removeBtn);         
+    buttonPanel.add(undoBtn);
     
     add(inputPanel, BorderLayout.NORTH);
     add(new JScrollPane(transactionsTable), BorderLayout.CENTER); 
@@ -157,6 +167,17 @@ public class ExpenseTrackerView extends JFrame {
 
   public List<Transaction> getDisplayedTransactions() {
     return displayedTransactions;
+  }
+
+  public void addRemoveListener(ActionListener l){ removeBtn.addActionListener(l); }
+  public void addUndoListener   (ActionListener l){ undoBtn.addActionListener(l);  }
+
+  public void setUndoEnabled(boolean enabled){ undoBtn.setEnabled(enabled); }
+
+  public Transaction getSelectedTransaction(){
+      int row = transactionsTable.getSelectedRow();
+      if(row == -1 || row >= displayedTransactions.size()) return null; // ignore Total row
+      return displayedTransactions.get(row);            // map view-row ⇢ model object
   }
 
   // Optional: remove if no longer needed
